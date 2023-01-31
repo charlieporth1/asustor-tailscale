@@ -29,8 +29,6 @@ jobs:
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk 
 
-      - run: ls -R
-
       - uses: actions/upload-artifact@v3
         with:
           name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
