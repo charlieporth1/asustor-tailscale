@@ -30,10 +30,12 @@ jobs:
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk 
       - run: |
-          git add .
-          git commit -m "Automatic Version Build from GitHub Action at: `date` $RELEASE_VERSION"
-          git tag -a $RELEASE_VERSION -m v$RELEASE_VERSION
-          git push origin HEAD:master
+          sudo git config user.name github-actions
+          sudo git config user.email github-actions@github.com
+          sudo git add .
+          sudo git commit -m "Automatic Version Build from GitHub Action at: `date` $RELEASE_VERSION"
+          sudo git tag -a $RELEASE_VERSION -m v$RELEASE_VERSION
+          sudo git push origin HEAD:master
 
       - uses: actions/upload-artifact@v3
         with:
