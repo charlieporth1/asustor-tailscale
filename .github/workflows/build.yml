@@ -14,17 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Builder
-        run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "export RELEASE_VERSION=$RELEASE_VERSION" >> $env_file
+        run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
-      - run: source $env_file; sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
+      - run: sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
 
       - run: ARCH=${X86_64} ./scripts/build.sh
-      - run: source $env_file; ARCH=${X86_64} ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${RELEASE_VERSION}_${ARCH}.apk
+      - run: ARCH=${X86_64} ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${RELEASE_VERSION}_${ARCH}.apk
 
       - run: ARCH=${AARCH64} ./scripts/build.sh
-      - run: source $env_file; ARCH=${AARCH64} ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${RELEASE_VERSION}_${ARCH}.apk
+      - run: ARCH=${AARCH64} ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${RELEASE_VERSION}_${ARCH}.apk
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
-          name: tailscale_${RELEASE_VERSION}_${ARCH}.apk
-          path: tailscale_${RELEASE_VERSION}_${ARCH}.apk
+          name: tailscale_${RELEASE_VERSION}_${AARCH64}.apk
+          path: tailscale_${RELEASE_VERSION}_${AARCH64}.apk
+      - uses: actions/upload-artifact@v3
+        with:
+          name: tailscale_${RELEASE_VERSION}_${X86_64}.apk
+          path: tailscale_${RELEASE_VERSION}_${X86_64}.apk
