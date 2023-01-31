@@ -23,7 +23,7 @@ jobs:
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
 
-      - run: sed -i "s|${{ env.X86_64 }}|${{ env.AARCH }}|g" apk/CONTROL/config.json
+      - run: sed -i "s|x86_64|${{ env.AARCH64 }}|g" apk/CONTROL/config.json
 
       - run: echo "ARCH=${{ env.AARCH }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
