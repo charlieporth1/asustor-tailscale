@@ -28,6 +28,7 @@ jobs:
       - run: echo "ARCH=${{ env.AARCH64 }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk 
+
       - run: |
           sudo git config user.name github-actions
           sudo git config user.email github-actions@github.com
