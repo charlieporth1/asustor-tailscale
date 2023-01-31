@@ -130,11 +130,11 @@ class Apkg:
 
 	# return True for files we want to exclude
 	def __excluded_files(self, file):
-		_return = False
+		_return = file
 		# here we're checking to see if the file is 'CONTROL' -
 		# a file don't want included in our tar archive.
-		if file.find('CONTROL') > -1:
-			_return = True
+		if file.name.find('CONTROL') > -1:
+			_return = None
 		return _return
 
 	def __zip_archive(self, apk_file, file_list):
@@ -150,13 +150,34 @@ class Apkg:
 		# create a tar archive of directory
 		with tarfile.open(tar_file, 'w:gz') as tar:
 			if os.path.basename(tar_file) == self.apk_file_contents['data']:
-				tar.add(path, exclude=self.__excluded_files)
+				tar.add(path, filter=self.__excluded_files)
 			else:
 				tar.add(path)
 
 	def __tar_extract(self, tar_file, path):
 		with tarfile.open(tar_file, 'r:gz') as tar:
-			tar.extractall(path)
+
+
+def is_within_directory(directory, target):
+	
+	abs_directory = os.path.abspath(directory)
+	abs_target = os.path.abspath(target)
+
+	prefix = os.path.commonprefix([abs_directory, abs_target])
+	
+	return prefix == abs_directory
+
+def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+
+	for member in tar.getmembers():
+		member_path = os.path.join(path, member.name)
+		if not is_within_directory(path, member_path):
+			raise Exception("Attempted Path Traversal in Tar File")
+
+	tar.extractall(path, members, numeric_owner=numeric_owner) 
+	
+
+safe_extract(tar, path)
 
 	def __get_apkg_version(self, version_file):
 		with file(version_file) as f:
@@ -503,7 +524,7 @@ class Apkg:
 		icon_enable_file  = control_dir + '/icon-enable.png'
 		icon_disable_file = control_dir + '/icon-disable.png'
 		icon_file         = control_dir + '/' + self.apk_control_files['icon']
-		
+
 		os.unlink(icon_disable_file)
 		os.rename(icon_enable_file, icon_file)
 
