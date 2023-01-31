@@ -19,13 +19,16 @@ jobs:
       - run: sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
 
       - run: sudo chown $USER:$USER -R .
-      - run: echo "ARCH=${X86_64}" >> $GITHUB_ENV
+      - run: echo "ARCH=${{ env.X86_64 }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${{ env.RELEASE_VERSION }}_${{ env.ARCH }}.apk
 
-      - run: echo "ARCH=${AARCH}" >> $GITHUB_ENV
+      - run  sed -i "s|${{ env.X86_64 }}|${{ env.AARCH }}|g"
+      - run: echo "ARCH=${{ env.AARCH }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${{ env.RELEASE_VERSION }}_${{ env.ARCH }}.apk
+
+      - run: ls -R
 
       - uses: actions/upload-artifact@v3
         with:

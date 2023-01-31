@@ -8,6 +8,7 @@
         "maintainer": "Charles Porth",
         "email": "c.porth@ctptech.dev",
         "website": "https://tailscale.com/",
+        "architecture": "x86_64",
         "firmware": "4.0.0",
         "model": [
             "66xx",
@@ -15,7 +16,8 @@
             "64xx",
             "63xx",
             "62xx",
-            "61xx"
+            "61xx",
+            "11xx"
         ]
     },
     "adm-desktop": {
