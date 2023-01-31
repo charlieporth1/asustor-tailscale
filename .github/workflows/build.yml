@@ -35,7 +35,6 @@ jobs:
           sudo git add .
           sudo git commit -m "Automatic Version Build from GitHub Action at: `date` ${{ env.RELEASE_VERSION }}"
           sudo git tag -a ${{ env.RELEASE_VERSION }} -m ${{ env.RELEASE_VERSION }}
-          sudo git release ${{ env.RELEASE_VERSION }} -s
           sudo git push origin HEAD:master
 
       - uses: actions/upload-artifact@v3
