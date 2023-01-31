@@ -130,11 +130,11 @@ class Apkg:
 
 	# return True for files we want to exclude
 	def __excluded_files(self, file):
-		_return = file
+		_return = False
 		# here we're checking to see if the file is 'CONTROL' -
 		# a file don't want included in our tar archive.
-		if file.name.find('CONTROL') > -1:
-			_return = None
+		if file.find('CONTROL') > -1:
+			_return = True
 		return _return
 
 	def __zip_archive(self, apk_file, file_list):
@@ -150,7 +150,7 @@ class Apkg:
 		# create a tar archive of directory
 		with tarfile.open(tar_file, 'w:gz') as tar:
 			if os.path.basename(tar_file) == self.apk_file_contents['data']:
-				tar.add(path, filter=self.__excluded_files)
+				tar.add(path, exclude=self.__excluded_files)
 			else:
 				tar.add(path)
 
@@ -503,7 +503,7 @@ class Apkg:
 		icon_enable_file  = control_dir + '/icon-enable.png'
 		icon_disable_file = control_dir + '/icon-disable.png'
 		icon_file         = control_dir + '/' + self.apk_control_files['icon']
-
+		
 		os.unlink(icon_disable_file)
 		os.rename(icon_enable_file, icon_file)
 
