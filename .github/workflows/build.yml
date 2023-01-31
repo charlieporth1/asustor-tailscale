@@ -16,7 +16,7 @@ jobs:
       - name: Builder
         run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "export RELEASE_VERSION=$RELEASE_VERSION" >> $env_file
 
-      - run: source $env_file; sed -i "|RELEASE_VERSION|$RELEASE_VERSION|" apk/CONTROL/config.json
+      - run: source $env_file; sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
 
       - run: ARCH=${X86_64} ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
