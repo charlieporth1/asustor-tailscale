@@ -21,13 +21,13 @@ jobs:
       - run: sudo chown $USER:$USER -R .
       - run: echo "ARCH=${{ env.X86_64 }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
-      - run: sudo ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${{ env.RELEASE_VERSION }}_${{ env.ARCH }}.apk
+      - run: sudo ./scripts/apkg-tools_py3.py create apk
 
       - run: sed -i "s|${{ env.X86_64 }}|${{ env.AARCH }}|g" apk/CONTROL/config.json
 
       - run: echo "ARCH=${{ env.AARCH }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
-      - run: sudo ./scripts/apkg-tools_py3.py create apk --destination=tailscale_${{ env.RELEASE_VERSION }}_${{ env.ARCH }}.apk
+      - run: sudo ./scripts/apkg-tools_py3.py create apk 
 
       - run: ls -R
 
