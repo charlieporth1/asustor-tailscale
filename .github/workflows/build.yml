@@ -5,11 +5,9 @@ env:
    env_file: .env
 
 on:
+  push:
   schedule:
     - cron: '30 5,17 * * * *'
-  push:
-    tags:
-      - '*.*.*'
 jobs:
   build:
     runs-on: ubuntu-latest
