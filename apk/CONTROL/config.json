@@ -1,14 +1,13 @@
 {
     "general": {
         "package": "tailscale",
-        "name": "TailScale",
+        "name": "Tailscale",
         "version": "RELEASE_VERSION",
         "depends": [],
         "developer": "Tailscale",
-        "maintainer": "chilic",
-        "email": "me@iche.eu",
+        "maintainer": "Charles Porth",
+        "email": "c.porth@ctptech.dev",
         "website": "https://tailscale.com/",
-        "architecture": "x86-64",
         "firmware": "4.0.0",
         "model": [
             "66xx",

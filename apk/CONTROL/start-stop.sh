@@ -9,7 +9,8 @@
 ### END INIT INFO
 
 DAEMON=tailscaled
-DAEMONOPTS="--state=/var/cache/tailscaled.state --port 41641"
+TS_STATE_DIR=/home/tailscaled
+DAEMONOPTS="--state=$TS_STATE_DIR/tailscaled.state --port 41641"
 RUNAS=root
 
 PIDFILE=/var/run/tailscaled.pid
@@ -20,9 +21,11 @@ start() {
     echo 'Service already running' >&2
     return 1
   fi
+  mkdir -p $TS_STATE_DIR
   echo 'Starting service…' >&2
   local CMD="$DAEMON $DAEMONOPTS &> \"$LOGFILE\" & echo \$!"
   su -c "$CMD" $RUNAS > "$PIDFILE"
+  tailscale up
   echo 'Service started' >&2
 }
 
