@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: GitHub Actions Auto Builder
 env:
    AARCH64: arm64
    X86_64: amd64
@@ -7,7 +7,7 @@ env:
 on:
   push:
   schedule:
-    - cron: '0 6 * * * *'
+    - cron: '0 6 * * *'
 jobs:
   build:
     runs-on: ubuntu-latest
