@@ -6,7 +6,7 @@ env:
 
 on:
   schedule:
-    - cron: "0 6 * * * *"
+    - cron: '30 5,17 * * * *'
   push:
     tags:
       - '*.*.*'
