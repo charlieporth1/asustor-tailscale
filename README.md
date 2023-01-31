@@ -10,3 +10,4 @@ Tailscale application for ASUSTOR NAS
 - [ ] UI, Connect and login
 - [ ] UI, Disconnect
 - [ ] Reconnect after reboot
+# asustor-tailscale
