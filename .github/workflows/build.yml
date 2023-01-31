@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set env
+      - name: Builder
       - run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "export RELEASE_VERSION=$RELEASE_VERSION" >> $env_file
 
       - run: source $env_file; sed -i "|RELEASE_VERSION|$RELEASE_VERSION|" apk/CONTROL/config.json
