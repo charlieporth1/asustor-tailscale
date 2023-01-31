@@ -34,7 +34,8 @@ jobs:
           sudo git config user.email github-actions@github.com
           sudo git add .
           sudo git commit -m "Automatic Version Build from GitHub Action at: `date` $RELEASE_VERSION"
-          sudo git tag -a $RELEASE_VERSION -m v$RELEASE_VERSION
+          sudo git tag -a $RELEASE_VERSION -m $RELEASE_VERSION
+	  sudo git release $RELEASE_VERSION -s
           sudo git push origin HEAD:master
 
       - uses: actions/upload-artifact@v3
