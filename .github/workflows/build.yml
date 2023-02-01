@@ -35,14 +35,11 @@ jobs:
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
       - run: |
-          sudo touch d
           sudo git config user.name github-actions
           sudo git config user.email github-actions@github.com
           sudo git add .
-          sudo rm d
-          sudo git add .
           sudo git commit -m "Automatic Version Build from GitHub Action at: `date` ${{ env.RELEASE_VERSION }}"
-          sudo git tag -a ${{ env.RELEASE_VERSION }} -m ${{ env.RELEASE_VERSION }}
+          sudo git tag -a ${{ env.RELEASE_VERSION }} -m "Automatic tag: ${{ env.RELEASE_VERSION }}"
           sudo git push origin ${{ env.RELEASE_VERSION }}
           sudo git push origin HEAD:master
 
@@ -50,6 +47,7 @@ jobs:
         with:
           name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
           path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
+
       - uses: actions/upload-artifact@v3
         with:
           name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
