@@ -35,7 +35,7 @@ jobs:
 
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
-     # - run: |
+      - run: sudo ls -R
       - run: sudo git config --local user.name github-actions
       - run: sudo git config --local user.email github-actions@github.com
       - run: sudo git add .
