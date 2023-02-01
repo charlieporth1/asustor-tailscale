@@ -53,15 +53,28 @@ jobs:
         with:
           name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
           path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+          asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+          asset_content_type: application/gzip
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
+          asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
+          asset_content_type: application/gzip
+
       - uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
+          tag_name: ${{ env.RELEASE_VERSION }}
+          release_name: Release ${{ env.RELEASE_VERSION }}
           draft: false
           prerelease: false
