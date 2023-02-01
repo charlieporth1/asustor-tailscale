@@ -16,10 +16,12 @@ jobs:
       - name: Builder
         run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
-      - run: sudo sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
 
       - run: sudo chown $USER:$USER -R .
-      - run: sudo cp -rf apk/CONTROL/config.json.edit  apk/CONTROL/config.json
+      - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
+
+      - run: sudo sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
+
       - run: echo "ARCH=${{ env.X86_64 }}" >> $GITHUB_ENV
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
@@ -31,7 +33,7 @@ jobs:
       - run: sudo ./scripts/apkg-tools_py3.py create apk
 
       - run: |
-          sudo cp -rf apk/CONTROL/config.json.edit  apk/CONTROL/config.json
+          sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
           sudo git config user.name github-actions
           sudo git config user.email github-actions@github.com
           sudo git add .
