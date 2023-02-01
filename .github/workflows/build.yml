@@ -1,5 +1,4 @@
-CI=false
-name: GitHub Actions Auto Builder CI=false
+name: GitHub Actions Auto Builder CI
 env:
    AARCH64: arm64
    X86_64: amd64
