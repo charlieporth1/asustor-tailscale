@@ -8,10 +8,10 @@ on:
   push:
   schedule:
     - cron: '0 6 * * *'
+ #ubuntu-latest
 jobs:
   build:
     runs-on: ubuntu-18.04
- #ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Auto Builder
