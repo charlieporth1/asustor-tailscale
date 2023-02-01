@@ -61,14 +61,6 @@ jobs:
           asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
           asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
           asset_content_type: application/gzip
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
-          asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
-          asset_content_type: application/gzip
 
       - uses: actions/create-release@v1
         env:
@@ -78,3 +70,13 @@ jobs:
           release_name: Release ${{ env.RELEASE_VERSION }}
           draft: false
           prerelease: false
+
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
+          asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
+          asset_content_type: application/gzip
+
