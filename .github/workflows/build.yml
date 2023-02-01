@@ -10,7 +10,7 @@ on:
     - cron: '0 6 * * *'
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04 #ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Auto Builder
