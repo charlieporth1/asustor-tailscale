@@ -36,13 +36,13 @@ jobs:
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
      # - run: |
-       - run: sudo git config --local user.name github-actions
-       - run: sudo git config --local user.email github-actions@github.com
-       - run: sudo git add .
-       - run: sudo git commit -m "Automatic Version Build from GitHub Action at: `date` ${{ env.RELEASE_VERSION }}"
-       - run: sudo git tag -a ${{ env.RELEASE_VERSION }} -m "Automatic tag: ${{ env.RELEASE_VERSION }}"
-       - run: sudo git push origin ${{ env.RELEASE_VERSION }}
-       - run: sudo git push origin HEAD:master
+      - run: sudo git config --local user.name github-actions
+      - run: sudo git config --local user.email github-actions@github.com
+      - run: sudo git add .
+      - run: sudo git commit -m "Automatic Version Build from GitHub Action at: `date` ${{ env.RELEASE_VERSION }}"
+      - run: sudo git tag -a ${{ env.RELEASE_VERSION }} -m "Automatic tag: ${{ env.RELEASE_VERSION }}"
+      - run: sudo git push origin ${{ env.RELEASE_VERSION }}
+      - run: sudo git push origin HEAD:master
 
       - uses: actions/upload-artifact@v3
         with:
