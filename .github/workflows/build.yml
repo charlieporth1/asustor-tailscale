@@ -1,7 +1,8 @@
 name: GitHub Actions Auto Builder CI
 env:
    AARCH64: arm64
-   X86_64: amd64
+   AMD64: amd64
+   X86_64: x86_64
    env_file: .env
 
 on:
@@ -26,14 +27,18 @@ jobs:
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
       - run: sudo sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
+      - run: sleep 5s
 
-      - run: echo "ARCH=${X86_64}" >> $GITHUB_ENV
+      - run: echo "ARCH=${AMD64}" >> $GITHUB_ENV
+      - run: sleep 5s
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
 
       - run: sudo sed -i "s|x86_64|${{ env.AARCH64 }}|g" apk/CONTROL/config.json
+      - run: sleep 5s
 
       - run: echo "ARCH=${AARCH64}" >> $GITHUB_ENV
+      - run: sleep 5s
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
 
@@ -55,8 +60,8 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: tailscale_${{ env.RELEASE_VERSION }}_x86_64.apk
-          path: tailscale_${{ env.RELEASE_VERSION }}_x86_64.apk
+          name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+          path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -66,6 +71,5 @@ jobs:
           title: "Automatic Release ${{ env.RELEASE_VERSION }}"
           files: |
             LICENSE.txt
-            tailscale_${{ env.RELEASE_VERSION }}_x86_64.apk
-            tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
+            *.apk
 
