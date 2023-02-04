@@ -62,5 +62,6 @@ jobs:
           title: "Automatic Release ${{ env.RELEASE_VERSION }}"
           files: |
             LICENSE.txt
-            *.apk
+            tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+            tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
 
