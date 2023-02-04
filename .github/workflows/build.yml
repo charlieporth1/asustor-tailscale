@@ -51,8 +51,8 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
-          path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+          name: tailscale_${{ env.RELEASE_VERSION }}_x86_64.apk
+          path: tailscale_${{ env.RELEASE_VERSION }}_x86_64.apk
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -62,6 +62,6 @@ jobs:
           title: "Automatic Release ${{ env.RELEASE_VERSION }}"
           files: |
             LICENSE.txt
-            tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
+            tailscale_${{ env.RELEASE_VERSION }}_x86_64.apk
             tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
 
