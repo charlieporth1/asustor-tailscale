@@ -1,5 +1,5 @@
 #apk/bin/tailscale
 #apk/bin/tailscaled
-tailscale*.tgz
+#tailscale*.tgz
 #tailscale*.apk
-tailscale_*_*/
+#tailscale_*_*/

@@ -17,7 +17,11 @@ jobs:
       - name: Auto Builder
         run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
+      - run: rm -rf tailscale_*.tgz
+      - run: rm -rf tailscale_*.apk
+      - run: rm -rf tailscale_*/
 
+      - run: sudo chown $USER:$USER -R .
       - run: sudo chown $USER:$USER -R .
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
