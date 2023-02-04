@@ -29,7 +29,7 @@ jobs:
       - run: sudo sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
       - run: sleep 5s
 
-      - run: echo "ARCH=${AMD64}" >> $GITHUB_ENV
+      - run: echo "ARCH=amd64" >> $GITHUB_ENV
       - run: sleep 5s
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
@@ -37,7 +37,7 @@ jobs:
       - run: sudo sed -i "s|x86_64|${{ env.AARCH64 }}|g" apk/CONTROL/config.json
       - run: sleep 5s
 
-      - run: echo "ARCH=${AARCH64}" >> $GITHUB_ENV
+      - run: echo "ARCH=arm64" >> $GITHUB_ENV
       - run: sleep 5s
       - run: sudo ./scripts/build.sh
       - run: sudo ./scripts/apkg-tools_py3.py create apk
