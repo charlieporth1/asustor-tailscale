@@ -62,7 +62,7 @@ jobs:
           asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
           asset_content_type: application/gzip
 
-      - uses:  - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ env.RELEASE_VERSION }}
