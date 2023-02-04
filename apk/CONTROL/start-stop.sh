@@ -25,6 +25,7 @@ start() {
   echo 'Starting service…' >&2
   local CMD="$DAEMON $DAEMONOPTS &> \"$LOGFILE\" & echo \$!"
   su -c "$CMD" $RUNAS > "$PIDFILE"
+  su -c "tailscale status --listen 0.0.0.0:8384 --web &" $RUNAS
   su -c "tailscale up" $RUNAS
   echo 'Service started' >&2
 }
