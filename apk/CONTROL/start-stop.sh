@@ -17,20 +17,22 @@ PIDFILE=/var/run/tailscaled.pid
 LOGFILE=/var/log/tailscaled.log
 
 start() {
-  if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then
+  if [ -f /var/run/$PIDNAME ]; then
     echo 'Service already running' >&2
     return 1
   fi
+
   mkdir -p $TS_STATE_DIR
   echo 'Starting service…' >&2
   local CMD="$DAEMON $DAEMONOPTS &> \"$LOGFILE\" & echo \$!"
   su -c "$CMD" $RUNAS > "$PIDFILE"
-  tailscale up
+  su -c "tailscale status --listen 0.0.0.0:8384 --web &" $RUNAS
+  su -c "tailscale up" $RUNAS
   echo 'Service started' >&2
 }
 
 stop() {
-  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
+  if [ ! -f "$PIDFILE" ]; then
     echo 'Service not running' >&2
     return 1
   fi
