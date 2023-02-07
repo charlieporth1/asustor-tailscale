@@ -1,7 +1,8 @@
 name: GitHub Actions Auto Builder CI
 env:
    AARCH64: arm64
-   X86_64: amd64
+   AMD64: amd64
+   X86_64: x86_64
    env_file: .env
 
 on:
@@ -17,21 +18,29 @@ jobs:
       - name: Auto Builder
         run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
+      - run: rm -rf tailscale_*.tgz
+      - run: rm -rf tailscale_*.apk
+      - run: rm -rf tailscale_*/
 
+      - run: sudo chown $USER:$USER -R .
       - run: sudo chown $USER:$USER -R .
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
       - run: sudo sed -i "s|RELEASE_VERSION|$RELEASE_VERSION|g" apk/CONTROL/config.json
+      - run: sleep 5s
 
-      - run: echo "ARCH=${{ env.X86_64 }}" >> $GITHUB_ENV
-      - run: sudo ./scripts/build.sh
-      - run: sudo ./scripts/apkg-tools_py3.py create apk
+      - run: echo "ARCH=amd64" >> $GITHUB_ENV
+      - run: sleep 5s
+      - run: sudo -E ./scripts/build.sh
+      - run: sudo -E ./scripts/apkg-tools_py3.py create apk
 
       - run: sudo sed -i "s|x86_64|${{ env.AARCH64 }}|g" apk/CONTROL/config.json
+      - run: sleep 5s
 
-      - run: echo "ARCH=${{ env.AARCH64 }}" >> $GITHUB_ENV
-      - run: sudo ./scripts/build.sh
-      - run: sudo ./scripts/apkg-tools_py3.py create apk
+      - run: echo "ARCH=arm64" >> $GITHUB_ENV
+      - run: sleep 5s
+      - run: sudo -E ./scripts/build.sh
+      - run: sudo -E ./scripts/apkg-tools_py3.py create apk
 
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
@@ -53,30 +62,14 @@ jobs:
         with:
           name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
           path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
-          asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
-          asset_content_type: application/gzip
 
-      - uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          tag_name: ${{ env.RELEASE_VERSION }}
-          release_name: Release ${{ env.RELEASE_VERSION }}
-          draft: false
-          prerelease: false
-
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
-          asset_name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
-          asset_content_type: application/gzip
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ env.RELEASE_VERSION }}
+          prerelease: true
+          title: "Automatic Release ${{ env.RELEASE_VERSION }}"
+          files: |
+            LICENSE.txt
+            *.apk
 
