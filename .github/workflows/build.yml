@@ -23,8 +23,8 @@ jobs:
       - if: failure()
         run: exit 0
 
-
-      - if: steps.new_version.conclusion == 'success'      
+      - id: no_new_version
+        if: steps.new_version.conclusion == 'success'      
         run: exit 0
 
       - id: checkout
