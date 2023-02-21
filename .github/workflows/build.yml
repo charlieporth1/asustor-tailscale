@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: new_version
+        name: Early exit if no new version
         run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
       - run: export RELEASE_VERSION_CTP_ASUSTOR_TS=$(curl --silent "https://api.github.com/repos/charlieporth1/asustor-tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION_CTP_ASUSTOR_TS=$RELEASE_VERSION_CTP_ASUSTOR_TS" >> $GITHUB_ENV
@@ -25,7 +26,7 @@ jobs:
   build:
     needs: check
     runs-on: ubuntu-latest
-    if: steps.new_version.conclusion == 'success'      
+    if: needs.check.outputs.status == 'success'
     steps:
       - id: no_new_version
         if: failure()
