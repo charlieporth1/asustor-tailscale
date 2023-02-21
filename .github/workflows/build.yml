@@ -20,7 +20,7 @@ jobs:
 
       - run: test "$RELEASE_VERSION_CTP_ASUSTOR_TS" = "$RELEASE_VERSION" && exit 0 || exit 1
 
-        if: failure()
+      - if: failure()
         run: exit 0
 
 
