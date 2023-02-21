@@ -18,22 +18,22 @@ jobs:
 
       - run: export RELEASE_VERSION_CTP_ASUSTOR_TS=$(curl --silent "https://api.github.com/repos/charlieporth1/asustor-tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION_CTP_ASUSTOR_TS=$RELEASE_VERSION_CTP_ASUSTOR_TS" >> $GITHUB_ENV
 
-      - run: test "$RELEASE_VERSION_CTP_ASUSTOR_TS" = "$RELEASE_VERSION" && exit 1 || exit 0
+      - run: test "$RELEASE_VERSION_CTP_ASUSTOR_TS" = "$RELEASE_VERSION" && exit 0 || exit 1
 
-
-      - id: no_new_version
         if: failure()
         run: exit 0
-      - if: steps.new_version.conclusion == 'failure'      
+
+
+      - if: steps.new_version.conclusion == 'success'      
         run: exit 0
 
       - id: checkout
-        if: steps.new_version.conclusion == 'success'      
+        if: steps.new_version.conclusion == 'failure'
         uses: actions/checkout@v3
         name: Auto Builder
 
       - id: build
-        if: steps.new_version.conclusion == 'success'      
+        if: steps.new_version.conclusion == 'failure'
         run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
       - run: rm -rf tailscale_*.tgz
       - run: rm -rf tailscale_*.apk
@@ -63,6 +63,7 @@ jobs:
 
       - id: commit
         if: steps.new_version.conclusion == 'success'      
+        if: steps.new_version.conclusion == 'failure'
         run: sudo ls -R
       - run: sudo git config --local user.name github-actions
       - run: sudo git config --local user.email github-actions@github.com
@@ -73,7 +74,7 @@ jobs:
       - run: sudo git push origin HEAD:master
 
       - id: upload
-        if: steps.new_version.conclusion == 'success'      
+        if: steps.new_version.conclusion == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: tailscale_${{ env.RELEASE_VERSION }}_${{ env.AARCH64 }}.apk
@@ -85,7 +86,7 @@ jobs:
           path: tailscale_${{ env.RELEASE_VERSION }}_${{ env.X86_64 }}.apk
 
       - id: release
-        if: steps.new_version.conclusion == 'success'      
+        if: steps.new_version.conclusion == 'failure'
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
