@@ -62,7 +62,6 @@ jobs:
       - run: sudo cp -rf apk/CONTROL/config.json.edit apk/CONTROL/config.json
 
       - id: commit
-        if: steps.new_version.conclusion == 'success'      
         if: steps.new_version.conclusion == 'failure'
         run: sudo ls -R
       - run: sudo git config --local user.name github-actions
