@@ -13,12 +13,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
-        run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+      - id: new_version
+      - run: export RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name'); echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
 
       - run: export RELEASE_VERSION_CTP_ASUSTOR_TS=$(curl --silent "https://api.github.com/repos/charlieporth1/asustor-tailscale/tags" | jq -r '.[0].name')
 
-      - id: new_version
       - run: test $RELEASE_VERSION_CTP_ASUSTOR_TS -eq $RELEASE_VERSION && exit 1 || echo 0
 
 
