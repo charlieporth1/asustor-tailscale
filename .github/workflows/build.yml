@@ -20,10 +20,11 @@ jobs:
 
       - run: test "$RELEASE_VERSION_CTP_ASUSTOR_TS" = "$RELEASE_VERSION" && exit 0 || exit 1
 
+      - id: no_new_version
       - if: failure()
         run: exit 0
 
-      - id: no_new_version
+      - id: no_new_version_alt
         if: steps.new_version.conclusion == 'success'      
         run: exit 0
 
