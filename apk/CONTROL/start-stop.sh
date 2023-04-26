@@ -11,6 +11,7 @@
 DAEMON=tailscaled
 TS_STATE_DIR=/home/tailscaled
 DAEMONOPTS="--state=$TS_STATE_DIR/tailscaled.state --port 41641"
+TS_UP_ARGS="--accept-routes=false --accept-dns=true --netfilter-mode=off"
 RUNAS=root
 
 PIDFILE=/var/run/tailscaled.pid
@@ -27,13 +28,13 @@ start() {
   local CMD="$DAEMON $DAEMONOPTS &> \"$LOGFILE\" & echo \$!"
   su -c "$CMD" $RUNAS > "$PIDFILE"
   su -c "tailscale status --listen 0.0.0.0:8384 --web &" $RUNAS
-  su -c "tailscale up" $RUNAS
+  su -c "tailscale up $TS_UP_ARGS" $RUNAS
   while true
   do
 	if ! pgrep -f tailscaled; then
 		su -c "$CMD" $RUNAS > "$PIDFILE"
 	fi
-	su -c "tailscale up" $RUNAS
+	su -c "tailscale up $TS_UP_ARGS" $RUNAS
 	echo "Up tailscale"
 	sleep 1s
   done
