@@ -67,9 +67,9 @@ jobs:
         run: sudo ls -R
       - run: sudo git config --local user.name github-actions
       - run: sudo git config --local user.email github-actions@github.com
-      - run: sudo git filter-branch --force --index-filter "git rm --cached --ignore-unmatch tailscale_*_*" --prune-empty --tag-name-filter cat -- --all
-      - run: sudo git gc --prune=now
-      - run: sudo git gc --aggressive --prune=now
+      - run: sudo git filter-branch --force --index-filter "git rm --cached --ignore-unmatch tailscale_*_*" --prune-empty --tag-name-filter cat -- --all; exit 0
+      - run: sudo git gc --prune=now; exit 0
+      - run: sudo git gc --aggressive --prune=now; exit 0
       - run: sudo git add .
       - run: sudo git commit -m "Automatic Version Build from GitHub Action at `date` ${{ env.RELEASE_VERSION }}"
       - run: sudo git tag -a ${{ env.RELEASE_VERSION }} -m "Automatic tag ${{ env.RELEASE_VERSION }}"
