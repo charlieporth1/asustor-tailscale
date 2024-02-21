@@ -65,6 +65,7 @@ jobs:
       - id: commit
         if: steps.new_version.conclusion == 'success'      
         run: sudo ls -R
+      - run: git filter-branch --force --index-filter "git rm --cached --ignore-unmatch tailscale_*_*" --prune-empty --tag-name-filter cat -- --all
       - run: sudo git config --local user.name github-actions
       - run: sudo git config --local user.email github-actions@github.com
       - run: sudo git add .
