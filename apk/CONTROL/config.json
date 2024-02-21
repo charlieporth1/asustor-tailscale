@@ -9,7 +9,7 @@
         "email": "c.porth@ctptech.dev",
         "website": "https://tailscale.com/",
         "architecture": "x86_64",
-        "firmware": "4.0.0",
+        "firmware": "4.2.6",
         "model": [
             "66xx",
             "65xx",
