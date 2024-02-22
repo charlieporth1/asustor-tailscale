@@ -112,7 +112,7 @@ class Apkg:
 			with zipfile.ZipFile(apk_file, 'r') as apk_zip:
 				file_list = apk_zip.namelist()
 		except zipfile.BadZipfile:
-			print ('File is not a apk file: %s' % (apk_file))
+			print ('File is not an apk file: %s' % (apk_file))
 			return False
 
 		# check apk file contents
@@ -123,19 +123,16 @@ class Apkg:
 		result = True
 		for (key, value) in self.apk_file_contents.items():
 			if value not in file_list:
-				print ('Can\'t found file in apk file: %s' % (value))
+				print ('Can\'t find file in apk file: %s' % (value))
 				result = False
 
 		return result
 
 	# return True for files we want to exclude
-	def __excluded_files(self, file):
-		_return = file
-		# here we're checking to see if the file is 'CONTROL' -
-		# a file don't want included in our tar archive.
-		if file.name.find('CONTROL') > -1:
-			_return = None
-		return _return
+	def __filter_files(self, file: tarfile.TarInfo):
+		if 'CONTROL' in file.name:
+			return None
+		return file
 
 	def __zip_archive(self, apk_file, file_list):
 		with zipfile.ZipFile(apk_file, 'w') as apk_zip:
@@ -150,7 +147,7 @@ class Apkg:
 		# create a tar archive of directory
 		with tarfile.open(tar_file, 'w:gz') as tar:
 			if os.path.basename(tar_file) == self.apk_file_contents['data']:
-				tar.add(path, filter=self.__excluded_files)
+				tar.add(path, filter=self.__filter_files)
 			else:
 				tar.add(path)
 
@@ -159,7 +156,7 @@ class Apkg:
 			tar.extractall(path)
 
 	def __get_apkg_version(self, version_file):
-		with file(version_file) as f:
+		with open(version_file) as f:
 			version = f.read().rstrip()
 		return version
 
@@ -223,10 +220,10 @@ class Apkg:
 		return True if self.__filter_special_chars(package, '[a-zA-Z0-9.+-]') == '' else False
 
 	def create(self, folder, dest_dir=None):
-		# check folder is exist
+		# check folder does exist
 		app_dir = os.path.abspath(folder)
 		if not os.path.isdir(app_dir):
-			print ('Not a directory: %s' % (app_dir))
+			print ('Directory doesn\'t exist: %s' % (app_dir))
 			return -1
 
 		control_dir = app_dir + '/' + self.apk_special_folders['control']
@@ -238,7 +235,7 @@ class Apkg:
 			return -1
 
 		# change file mode and owner
-		os.chmod(control_dir, 755)
+		os.chmod(control_dir, 0o755)
 		os.chown(control_dir, 0, 0)
 
 		all_files = glob.glob(control_dir + '/*')
@@ -246,15 +243,15 @@ class Apkg:
 		py_files  = glob.glob(control_dir + '/*.py')
 
 		for one_file in all_files:
-			os.chmod(one_file, 644)
+			os.chmod(one_file, 0o644)
 			os.chown(one_file, 0, 0)
 
 		for one_file in sh_files:
-			os.chmod(one_file, 755)
+			os.chmod(one_file, 0o755)
 			os.system('dos2unix %s > /dev/null 2>&1' % (one_file))
 
 		for one_file in py_files:
-			os.chmod(one_file, 755)
+			os.chmod(one_file, 0o755)
 
 		app_info = self.__get_app_info(control_dir, self.apk_format['version'])
 
@@ -304,10 +301,10 @@ class Apkg:
 		return apk_file
 
 	def extract(self, package, dest_dir=None):
-		# check file is exist
+		# check file does exist
 		apk_file = os.path.abspath(package)
 		if not os.path.isfile(apk_file):
-			print ('Not a file: %s' % (apk_file))
+			print ('File doesn\'t exist: %s' % (apk_file))
 			return -1
 
 		# check package format (apk: zip format; contain files: apkg-version, control.tar.gz, data.tar.gz)
@@ -339,7 +336,7 @@ class Apkg:
 		# get apk information
 		apk_info = self.__get_app_info(tmp_control_dir, apkg_version)
 
-		# error handle
+		# error handle		
 		if apk_info is None:
 			print ('Extract error: %s' % (apk_file))
 			shutil.rmtree(tmp_dir, ignore_errors=True)
@@ -357,7 +354,7 @@ class Apkg:
 			app_dir = dest_dir + '/' + apk_info['general']['name'] + '_' + apk_info['general']['version'] + '_' + apk_info['general']['architecture']
 
 		if os.path.isdir(app_dir):
-			print ('The folder is exist, please remove it: %s' % (app_dir))
+			print ('The directory does exist, please remove it: %s' % (app_dir))
 			shutil.rmtree(tmp_dir, ignore_errors=True)
 			return -1
 		else:
@@ -503,7 +500,7 @@ class Apkg:
 		icon_enable_file  = control_dir + '/icon-enable.png'
 		icon_disable_file = control_dir + '/icon-disable.png'
 		icon_file         = control_dir + '/' + self.apk_control_files['icon']
-
+		
 		os.unlink(icon_disable_file)
 		os.rename(icon_enable_file, icon_file)
 
@@ -523,7 +520,7 @@ class Apkg:
 		# check file is exist
 		abs_path = os.path.abspath(package)
 		if not os.path.isfile(abs_path):
-			print ('Not a file: %s' % (abs_path))
+			print ('File doesn\'t exist: %s' % (abs_path))
 			return -1
 
 		print ('function not support: %s' % ('upload'))
@@ -533,16 +530,16 @@ if __name__ == "__main__":
 	# create the top-level parser
 	parser = argparse.ArgumentParser(description='asustor package helper.')
 
-	subparsers = parser.add_subparsers(help='sub-commands')
+	subparsers = parser.add_subparsers(help='arguments')
 
 	# create the parser for the "create" commad
-	parser_create = subparsers.add_parser('create', help='create package from folder')
+	parser_create = subparsers.add_parser('create', help='<folder> [--destination <folder>] create package')
 	parser_create.add_argument('folder', help='select a package layout folder to pack')
-	parser_create.add_argument('--destination', help='move apk to destination folder')
+	parser_create.add_argument('--destination', help='create apk in destination folder')
 	parser_create.set_defaults(command='create')
 
 	# create the parser for the "extract" commad
-	parser_extract = subparsers.add_parser('extract', help='extract package to folder')
+	parser_extract = subparsers.add_parser('extract', help='<package> [--destination <folder>] extract package')
 	parser_extract.add_argument('package', help='select a package to extract')
 	parser_extract.add_argument('--destination', help='extract apk to destination folder')
 	parser_extract.set_defaults(command='extract')
