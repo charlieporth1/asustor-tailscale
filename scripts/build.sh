@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+chmod +x ./scripts/apkg-tools_py3.py
+
 RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq -r '.[0].name' | awk -F'v' '{print $2}')
 NAME=tailscale_${RELEASE_VERSION}_${ARCH}
 
