@@ -14,7 +14,7 @@ NAME=tailscale_${RELEASE_VERSION}_${ARCH}
 if [[ -f ${NAME}.tgz ]]; then
 	rm ${NAME}.tgz
 fi
-https://pkgs.tailscale.com/stable/tailscale_1.72.1_amd64.tgz
+
 curl https://pkgs.tailscale.com/stable/${NAME}.tgz --output ${NAME}.tgz
 
 
