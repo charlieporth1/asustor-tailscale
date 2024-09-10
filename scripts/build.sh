@@ -7,7 +7,7 @@ rm -rf tailscale_*.apk
 rm -rf tailscale_*/
 rm apk/bin/tailscale*
 
-RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq '.[] | select(.name | endswith("pre") | not)' | jq -r '.name' | head -n +1)
+RELEASE_VERSION=$(curl --silent "https://api.github.com/repos/tailscale/tailscale/tags" | jq '.[] | select(.name | endswith("pre") | not)' | jq -r '.name' | head -n +1 | awk -Fv '{print $2}')
 NAME=tailscale_${RELEASE_VERSION}_${ARCH}
 
 
