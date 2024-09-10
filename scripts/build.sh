@@ -11,7 +11,7 @@ fi
 
 curl https://pkgs.tailscale.com/stable/${NAME}.tgz --output ${NAME}.tgz
 
-tar -xvf ${NAME}.tgz
+tar -xvzf ${NAME}.tgz
 cp -rf ${NAME}/tailscale apk/bin/tailscale
 cp -rf ${NAME}/tailscaled apk/bin/tailscaled
 chmod +x apk/bin/tailscale
